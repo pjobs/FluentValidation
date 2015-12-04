@@ -84,7 +84,9 @@ namespace FluentValidation.Mvc {
 
 		protected virtual IValidator CreateValidator(ModelMetadata metadata, ControllerContext context) {
 			if (IsValidatingProperty(metadata)) {
-				return ValidatorFactory.GetValidator(metadata.ContainerType);
+				var validator = ValidatorFactory.GetValidator(metadata.ContainerType);
+                if (validator == null && metadata.Container != null) validator = ValidatorFactory.GetValidator(metadata.Container.GetType());
+                return validator;
 			}
 			return ValidatorFactory.GetValidator(metadata.ModelType);
 		}
